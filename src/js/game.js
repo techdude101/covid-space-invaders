@@ -1,5 +1,6 @@
 import  Ship from './ship';
 import Enemy from './enemy';
+import Explosion from './explosion';
 import Projectile from './projectile';
 
 export class Game {
@@ -27,6 +28,7 @@ export class Game {
         this.gameFont = "monospace";
 
         this.tickCount = 0;
+        this.explosion = null;
 
         this.newGame();
 
@@ -55,6 +57,7 @@ export class Game {
     }
 
     newGame() {
+        this.explosion = null;
         this.keys = {
             left: false,
             right: false,
@@ -288,6 +291,10 @@ export class Game {
             });
         }
 
+        if (this.explosion) {
+            this.explosion.draw();
+        }
+
         context.globalAlpha = 1;
 
         if (this.state === 'Next Level') {
@@ -340,7 +347,13 @@ export class Game {
             this.updateEnemies();
             this.updatePlayer();
             this.updateProjectiles();
-
+            if (this.explosion !== null) {
+                this.explosion.update();
+                if (this.explosion.lifeTime <= 0) {
+                    this.explosion.remove();
+                    this.explosion = null;
+                }
+            }
             // Check for collisions
             this.collisionCheck();
 
@@ -407,6 +420,8 @@ export class Game {
             }
             this.projectiles.forEach(projectile => {
                 if (enemy.isCollisionDetected(projectile.getX(), projectile.getY(), projectile.width, projectile.height)) {
+                    // Create new explosion
+                    this.explosion = new Explosion(this.gameCanvas, projectile.getX(), projectile.getY());
                     this.enemies.splice(this.enemies.indexOf(enemy), 1);
                     this.projectiles.splice(this.projectiles.indexOf(projectile), 1);
                     this.score += 10;
