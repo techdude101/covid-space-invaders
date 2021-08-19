@@ -429,6 +429,7 @@ export class Game {
                         this.level += 1;
                         newState = 'Next Level';
                         if (this.level > 10) {
+                            this.level = 10;
                             newState = 'Won';
                         }
                     }
