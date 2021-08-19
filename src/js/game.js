@@ -17,6 +17,7 @@ export class Game {
         this.enemies = [];
         this.projectileWidth = 2;
         this.projectileHeight = 4;
+        this.maxLevel = 20;
         this.level = 1;
         this.score = score;
         this.lives = lives;
@@ -85,8 +86,11 @@ export class Game {
             this.ship = new Ship(this.gameCanvas);
         }
 
-        const enemySize = 20 - this.level;
-        const enemyMinX = Math.ceil(this.ship.width / 2) + 10;
+        let enemySize = 20 - this.level;
+        if (this.level > 10) {
+            enemySize = 10;
+        }
+        const enemyMinX = this.ship.width;
         const enemyMaxX = Math.floor(this.gameCanvas.width - (this.ship.width / 2));
 
         for (let i = 0; i < 2; i++) {
@@ -97,6 +101,12 @@ export class Game {
         }
         this.spawnEnemy('top', enemyMinX, enemyMaxX, enemySize, enemySize);
         this.spawnEnemy('middle', enemyMinX, enemyMaxX, enemySize, enemySize);
+        if (this.level > 10) {
+            for (let i = 0; i < (this.level % 10) * 2; i++) {
+                this.spawnEnemy('middle', enemyMinX, enemyMaxX, enemySize, enemySize);
+                this.spawnEnemy('top', enemyMinX, enemyMaxX, enemySize, enemySize);
+            }
+        }
 
         this.drawNewGame(this.gameCanvas.width / 2, this.gameCanvas.height / 2, 40);
     }
@@ -112,7 +122,6 @@ export class Game {
                 break;
             case 'left':
                 x = Math.floor(Math.random() * (this.gameCanvas.width / 3));
-                if (x < minX) { x = minX; }
                 break;
             case 'right':
                 x = this.gameCanvas.width - Math.floor(Math.random() * (this.gameCanvas.width / 3));
@@ -127,7 +136,7 @@ export class Game {
                 break;
         }
         
-        if (x < 0) { x = 10; }
+        if (x <= minX) { x = minX; }
         if (y < 0) { y = 0; }
 
         this.enemies.push(new Enemy(this.gameCanvas, x, y, width, height));
@@ -428,8 +437,8 @@ export class Game {
                     if (this.enemies.length === 0) {
                         this.level += 1;
                         newState = 'Next Level';
-                        if (this.level > 10) {
-                            this.level = 10;
+                        if (this.level > this.maxLevel) {
+                            this.level = this.maxLevel;
                             newState = 'Won';
                         }
                     }
