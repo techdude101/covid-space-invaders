@@ -17,7 +17,7 @@ export class Game {
         this.enemies = [];
         this.projectileWidth = 2;
         this.projectileHeight = 4;
-        this.maxLevel = 20;
+        this.maxLevel = 21;
         this.level = 1;
         this.score = score;
         this.lives = lives;
