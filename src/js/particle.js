@@ -10,7 +10,7 @@ export default class Particle {
   }
 
   update() {
-    const gravity = 0.9;
+    const gravity = 2;
     this.x += this.direction.x * this.speed;
     if (this.direction.y == -1) {
       this.y += (this.direction.y * this.speed) + gravity;
