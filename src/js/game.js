@@ -11,6 +11,8 @@ export class Game {
             space: false,
         };
 
+        this.sound = new Audio('https://freesound.org/data/previews/259/259681_4157918-lq.mp3');
+        this.sound.load();
         this.mouseDown = false;
 
         this.projectiles = [];
@@ -429,6 +431,10 @@ export class Game {
             }
             this.projectiles.forEach(projectile => {
                 if (enemy.isCollisionDetected(projectile.getX(), projectile.getY(), projectile.width, projectile.height)) {
+                    // Play sound
+                    this.sound.position
+                    this.sound.play();
+
                     // Create new explosion
                     this.explosion = new Explosion(this.gameCanvas, projectile.getX(), projectile.getY());
                     this.enemies.splice(this.enemies.indexOf(enemy), 1);
